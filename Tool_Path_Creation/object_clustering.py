@@ -44,13 +44,21 @@ if __name__ == "__main__":
                     image_to_numpy_array(
                             open_image("example_image_5.png"))))
 
+    perims = []
     fig = plt.figure()
-    for i, obj in enumerate(separate_objects(out)):
+    for perim in [get_perimeters(obj) for obj in separate_objects(out)]:
         fig.clear()
-        cam = Camera(fig)
-        for perim in get_perimeters(obj):
-            plt.imshow(np.squeeze(perim))
-            cam.snap()
+        for i in range(0, len(perim), 3):
+            perims.append(reduce(lambda x, y: np.logical_or(x, y), perim[i:i + 3]))
+            plt.imshow(perims[-1])
 
-        animation = cam.animate()
-        animation.save(f'animation{i}.gif')
+        # fig = plt.figure()
+        # for i, obj in enumerate(separate_objects(out)):
+        #     fig.clear()
+        #     cam = Camera(fig)
+        #     for perim in get_perimeters(obj):
+        #         plt.imshow(np.squeeze(perim))
+        #         cam.snap()
+
+        # animation = cam.animate()
+        # animation.save(f'animation{i}.gif')
